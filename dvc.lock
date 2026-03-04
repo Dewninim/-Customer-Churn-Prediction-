@@ -1,0 +1,135 @@
+schema: '2.0'
+stages:
+  training:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: cdb04c19b2a01c3ac62b24fdc64ffd10
+      size: 201730
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 404e5ba7f5ee10a68055ff96510c3e71
+      size: 804377
+    - path: src/train.py
+      hash: md5
+      md5: f7ce1c6ab7d34bc97901d28ae679ae8e
+      size: 1337
+    params:
+      params.yaml:
+        mlflow.experiment_name: churn_prediction
+        train.class_weight: balanced
+        train.max_iter: 5000
+    outs:
+    - path: models/best_model.joblib
+      hash: md5
+      md5: e3d3c9753ec6e93c01df88bb171c5ce4
+      size: 1839
+  evaluation:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: cdb04c19b2a01c3ac62b24fdc64ffd10
+      size: 201730
+    - path: models/best_model.joblib
+      hash: md5
+      md5: e3d3c9753ec6e93c01df88bb171c5ce4
+      size: 1839
+    - path: src/evaluate.py
+      hash: md5
+      md5: 104b1c1596335ec9cdf52e9c0fc61513
+      size: 765
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: 25ce72381a9f8312567a39e862ce4b79
+      size: 77
+  data_ingestion:
+    cmd: cd data && python data_ingestion.py
+    deps:
+    - path: data/data_ingestion.py
+      hash: md5
+      md5: 4578ddf1180212c0d9605273bbe0c14d
+      size: 531
+    - path: data/dataset.csv
+      hash: md5
+      md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+      size: 977501
+    outs:
+    - path: data/raw/churn.csv
+      hash: md5
+      md5: 7f07de26b054de4c36eed95a1277fe21
+      size: 978285
+  preprocess:
+    cmd: cd data && python preprocessing.py
+    deps:
+    - path: data/preprocessing.py
+      hash: md5
+      md5: ac6387b1b38dac4edbe328b5190fdfb5
+      size: 2330
+    - path: data/raw/churn.csv
+      hash: md5
+      md5: 7f07de26b054de4c36eed95a1277fe21
+      size: 978285
+    params:
+      params.yaml:
+        data.random_state: 42
+        data.test_size: 0.2
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: cdb04c19b2a01c3ac62b24fdc64ffd10
+      size: 201730
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 404e5ba7f5ee10a68055ff96510c3e71
+      size: 804377
+    - path: reports/feature_schema.json
+      hash: md5
+      md5: f8bc19633aaa77a133a584062cdcc3fd
+      size: 832
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: cdb04c19b2a01c3ac62b24fdc64ffd10
+      size: 201730
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 404e5ba7f5ee10a68055ff96510c3e71
+      size: 804377
+    - path: src/train.py
+      hash: md5
+      md5: f7ce1c6ab7d34bc97901d28ae679ae8e
+      size: 1337
+    params:
+      params.yaml:
+        train.class_weight: balanced
+        train.max_iter: 5000
+    outs:
+    - path: models/best_model.joblib
+      hash: md5
+      md5: e3d3c9753ec6e93c01df88bb171c5ce4
+      size: 1839
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: cdb04c19b2a01c3ac62b24fdc64ffd10
+      size: 201730
+    - path: models/best_model.joblib
+      hash: md5
+      md5: e3d3c9753ec6e93c01df88bb171c5ce4
+      size: 1839
+    - path: src/evaluate.py
+      hash: md5
+      md5: 104b1c1596335ec9cdf52e9c0fc61513
+      size: 765
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: 25ce72381a9f8312567a39e862ce4b79
+      size: 77

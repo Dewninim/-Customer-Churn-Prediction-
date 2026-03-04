@@ -1,0 +1,43 @@
+stages:
+
+  data_ingestion:
+    cmd: cd data && python data_ingestion.py
+    deps:
+      - data/data_ingestion.py
+      - data/dataset.csv
+    outs:
+      - data/raw/churn.csv
+
+  preprocess:
+    cmd: cd data && python preprocessing.py
+    deps:
+      - data/preprocessing.py
+      - data/raw/churn.csv
+    params:
+      - data.test_size
+      - data.random_state
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv
+      - reports/feature_schema.json
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/processed/train.csv
+      - data/processed/test.csv
+    params:
+      - train.class_weight
+      - train.max_iter
+    outs:
+      - models/best_model.joblib
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - models/best_model.joblib
+      - data/processed/test.csv
+    outs:
+      - reports/metrics.json

@@ -35,3 +35,6 @@ logs/
 
 # Database
 *.db
+/config.local
+/tmp
+/cache
