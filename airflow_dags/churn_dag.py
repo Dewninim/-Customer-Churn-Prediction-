@@ -75,4 +75,5 @@ with DAG(
     t5 = PythonOperator(task_id="model_evaluation",   python_callable=run_model_evaluation)
     t6 = PythonOperator(task_id="model_registration", python_callable=run_model_registration)
 
+
     t1 >> t2 >> t3 >> t4 >> t5 >> t6
