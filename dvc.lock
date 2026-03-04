@@ -46,32 +46,32 @@ stages:
       md5: 25ce72381a9f8312567a39e862ce4b79
       size: 77
   data_ingestion:
-    cmd: cd data && python data_ingestion.py
+    cmd: python src/data_ingestion.py
     deps:
-    - path: data/data_ingestion.py
-      hash: md5
-      md5: 4578ddf1180212c0d9605273bbe0c14d
-      size: 531
-    - path: data/dataset.csv
+    - path: data/raw/dataset.csv
       hash: md5
       md5: 0f9de68e012bd3aed5fa7cdc9fc421af
       size: 977501
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: 7e999c6f8d65695da8259611fb3b90b6
+      size: 521
     outs:
     - path: data/raw/churn.csv
       hash: md5
       md5: 7f07de26b054de4c36eed95a1277fe21
       size: 978285
   preprocess:
-    cmd: cd data && python preprocessing.py
+    cmd: python src/preprocessing.py
     deps:
-    - path: data/preprocessing.py
-      hash: md5
-      md5: ac6387b1b38dac4edbe328b5190fdfb5
-      size: 2330
     - path: data/raw/churn.csv
       hash: md5
       md5: 7f07de26b054de4c36eed95a1277fe21
       size: 978285
+    - path: src/preprocessing.py
+      hash: md5
+      md5: 3686201f3813e001d7f6859a4eb1e5a9
+      size: 2116
     params:
       params.yaml:
         data.random_state: 42
