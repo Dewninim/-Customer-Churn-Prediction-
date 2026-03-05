@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import os
+import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
@@ -31,6 +32,10 @@ def preprocess():
     scaler = MinMaxScaler()
     numeric_cols = ["tenure","MonthlyCharges","TotalCharges"]
     df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+    os.makedirs("models", exist_ok=True)
+    joblib.dump(scaler, "models/scaler.pkl")
+    print("Scaler saved → models/scaler.pkl")
+
     X = df.drop("Churn", axis=1)
     y = df["Churn"]
     X_train, X_test, y_train, y_test = train_test_split(
