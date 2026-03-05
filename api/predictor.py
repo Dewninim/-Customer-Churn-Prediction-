@@ -3,7 +3,7 @@ import joblib
 import os
 from sklearn.preprocessing import MinMaxScaler
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "../models/best_model.joblib")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "best_model.pkl")
 model = joblib.load(MODEL_PATH)
 
 # These are the min/max values from original dataset for scaling
